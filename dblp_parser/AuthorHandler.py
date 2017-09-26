@@ -35,7 +35,7 @@ class AuthorHandler(xml.sax.handler.ContentHandler):
                 if self.new_row:
                     self.new_row['id'] = self.author_id
                     self.author_id += 1
-                    self.csv_writer.add_row(self.new_row)
+                    self.csv_writer.add_row(self.new_row,0)
                     print('Added new row to be output to csv')
                 self.new_row = {}
                 self.is_www = False
