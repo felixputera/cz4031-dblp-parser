@@ -1,4 +1,5 @@
 import csv
+import os.path
 
 
 class CsvWriter:
@@ -21,14 +22,18 @@ class CsvWriter:
         self.rows.append(row)
 
     def write(self, append=False):
+        fileout_is_created = os.path.isfile(self.fileout)
         fopenmode = 'a' if append else 'w'
-        with open(self.fileout, fopenmode) as csvfile:
+        with open(self.fileout, fopenmode, encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames)
-            writer.writeheader()
+
+            if not fileout_is_created:
+                writer.writeheader()
+
             for row in self.rows:
                 for key, value in row.items():
                     if isinstance(value, list):
-                        row[key] = ','.join(value)
+                        row[key] = ' | '.join(value)
                 writer.writerow(row)
         #
         # if not self.fileout_parent == 'csv_parent_out.txt':
