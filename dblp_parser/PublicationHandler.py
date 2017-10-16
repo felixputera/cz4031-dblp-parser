@@ -9,7 +9,7 @@ class PublicationHandler(xml.sax.handler.ContentHandler):
     def __init__(self, elementname, fieldnames):
         xml.sax.ContentHandler.__init__(self)
 
-        self.pub_csv_writer = CsvWriter(fieldnames=('id', 'key', 'mdate', 'title', 'url', 'ee'),
+        self.pub_csv_writer = CsvWriter(fieldnames=('id', 'key', 'mdate', 'title', 'url', 'ee', 'author'),
                                         fileout='publication.txt')
         self.my_fieldnames = fieldnames
         self.my_elementname = elementname
@@ -46,8 +46,8 @@ class PublicationHandler(xml.sax.handler.ContentHandler):
                 if 'mdate' in attrs.getNames():
                     self.pub_row['mdate'] = attrs.getValue('mdate')
         else:
-            # if name == 'author' or name == 'editor':
-            #     self.is_author = True
+            if name == 'author' or name == 'editor':
+                self.is_author = True
             if name == 'title':
                 self.is_title = True
             elif name == 'url':
@@ -65,9 +65,9 @@ class PublicationHandler(xml.sax.handler.ContentHandler):
             return
         if self.content != '':
             self.content = self.content.strip()
-            # if self.is_author:
-            #     self.author_list.append(self.content)
-            #     self.is_author = False
+            if self.is_author:
+                self.author_list.append(self.content)
+                self.is_author = False
             if self.is_title:
                 self.pub_row['title'] = self.content
                 self.is_title = False
@@ -90,16 +90,16 @@ class PublicationHandler(xml.sax.handler.ContentHandler):
                 self.my_row['p_id'] = self.pub_id
                 self.pub_id += 1
 
-                # self.pub_row['author'] = self.author_list
+                self.pub_row['author'] = self.author_list
 
                 self.pub_csv_writer.add_row(self.pub_row)
                 self.my_csv_writer.add_row(self.my_row)
-                print('Added new row to 2 csvs')
+                # print('Added new row to 2 csvs')
                 self.my_row = {value: [] for value in self.my_fieldnames}
                 self.pub_row = {}
                 self.is_my_element = False
-                # self.author_list = []
-        print('Processed %d element(s)' % self.element_count)
+                self.author_list = []
+        # print('Processed %d element(s)' % self.element_count)
         self.element_count += 1
 
     def characters(self, content):
@@ -110,3 +110,4 @@ class PublicationHandler(xml.sax.handler.ContentHandler):
         self.pub_csv_writer.write(append=True)
         del self.my_csv_writer
         del self.pub_csv_writer
+        print(self.pub_id)

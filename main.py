@@ -23,9 +23,9 @@ if __name__ == "__main__":
     book_fieldnames = ('p_id', 'publisher', 'year', 'volume', 'number')
     book_handler = PublicationHandler(elementname='book', fieldnames=book_fieldnames)
 
-    # parse('dblp.xml', incollection_handler)
-    # parse('dblp.xml', article_handler)
-    # parse('dblp.xml', inproceedings_handler)
+    parse('dblp.xml', incollection_handler)
+    parse('dblp.xml', article_handler)
+    parse('dblp.xml', inproceedings_handler)
     parse('dblp.xml', phdthesis_handler)
     parse('dblp.xml', mastersthesis_handler)
     parse('dblp.xml', book_handler)
